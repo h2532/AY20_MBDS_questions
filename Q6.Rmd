@@ -1,0 +1,81 @@
+---
+title: "Q6output"
+output: pdf_document
+---
+
+```{r,echo=FALSE}
+x<-c(4,2,3,2,5,9,14,20,18,11)
+y<-c(3,6,12,17,20,21,19,14,3,7)
+testx<-c(7,10,11,12,16,16,17,18,18,20) 
+testy<-c(11,14,4,21,3,10,4,7,17,7)
+plot(x,y)
+text(x,y,paste("(",x,",",y,")"),cex=0.7)
+polygon(x,y)
+points(testx,testy)
+text(testx,testy,paste("(",testx,",",testy,")"))
+lines(c(3,11),c(12,7))
+```
+
+```{r,results='hide',tidy=TRUE,echo=FALSE}
+#I seperate this polydron in two convex polydra
+#I reagrange the points of the polydron
+x1<-c(2,5,9,14,20,18,11,3,2)
+y1<-c(17,20,21,19,14,3,7,12,17)
+x2<-c(2,3,11,4,2)
+y2<-c(6,12,7,3,6)
+#I construt fun1 to calculate the sum of angles of a input point with each point of convex polydron 1
+fun1=function(s,v){
+  a=vector(mode="numeric",length=0)
+  b=vector(mode="numeric",length=0)
+  c=vector(mode="numeric",length=0)
+  d=vector(mode="numeric",length=0)
+  cos=vector(mode="numeric",length=0)
+  theta=vector(mode="numeric",length=0)
+  for (i in 1:8)
+  {
+  a[i]=c(x1[i]-s)
+  b[i]=c(y1[i]-v)
+  c[i]=c(x1[i+1]-s)
+  d[i]=c(y1[i+1]-v)
+  cos[i]=(a[i]*c[i]+b[i]*d[i])/sqrt((a[i]*a[i]+b[i]*b[i])*(c[i]*c[i]+d[i]*d[i]))
+  theta[i]=acos(cos[i])
+}
+  return(sum(theta))
+}
+#I construt fun2 to calculate the sum of angles of a input point with each point of convex polydron 2
+fun2=function(s,v){
+  a=vector(mode="numeric",length=0)
+  b=vector(mode="numeric",length=0)
+  c=vector(mode="numeric",length=0)
+  d=vector(mode="numeric",length=0)
+  cos=vector(mode="numeric",length=0)
+  theta=vector(mode="numeric",length=0)
+  for (i in 1:4)
+  {
+  a[i]=c(x2[i]-s)
+  b[i]=c(y2[i]-v)
+  c[i]=c(x2[i+1]-s)
+  d[i]=c(y2[i+1]-v)
+  cos[i]=(a[i]*c[i]+b[i]*d[i])/sqrt((a[i]*a[i]+b[i]*b[i])*(c[i]*c[i]+d[i]*d[i]))
+  theta[i]=acos(cos[i])
+}
+  return(sum(theta))
+}
+#if for either polydron 1 or polydron2 the sum of angles is 2pi,the points is in the polydron
+determine=vector(mode="numeric",length=0)
+for(i in 1:10){
+determine[i]=if(fun1(testx[i],testy[i])>=6.28&fun1(testx[i],testy[i])<=6.284)
+{
+  print("inside")
+} else if(fun2(testx[i],testy[i])>=6.28&fun2(testx[i],testy[i])<=6.284){
+   print("inside")
+  }else{
+   print("outside")
+  }
+}
+```
+
+```{r,echo=FALSE}
+output<-cbind(testx,testy,determine)
+output
+```

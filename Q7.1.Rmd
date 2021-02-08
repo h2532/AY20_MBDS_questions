@@ -1,0 +1,59 @@
+---
+title: "Q7.1"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## (a)
+
+output index
+
+the equations:\ $index=x_1+L_1*x_2$
+
+output coordinates
+
+the equations:\ $x_1= index\ mod\ L_1$ and $x_2=\frac{index-(index\ mod\ L_1)}{L_1}$
+
+## (b)
+
+```{r,tidy=TRUE}
+findindex=function(x,y){
+  index<-50*y+x
+  return(index)
+}
+findindex(16,55)
+```
+
+```{r,tidy=TRUE}
+findcoo=function(x){
+  x1=x%%50
+  x2=(x-x%%50)/50
+  return(c(x1,x2))
+}
+
+findcoo(2283)
+```
+
+```{r,tidy=TRUE}
+input<-read.table("D:/AY20_MBDS_questions/Question 7/Question 7.1/input_coordinates_7_1.txt")
+index<-read.table("D:/AY20_MBDS_questions/Question 7/Question 7.1/input_index_7_1.txt")
+x1<-input$V1
+x2<-input$V2
+index<-index$V1
+findindex(x1,x2)
+```
+
+
+
+```{r}
+coo1=vector(mode="numeric",length=0)
+coo2=vector(mode="numeric",length=0)
+for(j in 1:length(index)){
+coo1[j]<-findcoo(index[j])[1]
+coo2[j]<-findcoo(index[j])[2]
+  }
+coo<-cbind(coo1,coo2)
+coo
+
+```

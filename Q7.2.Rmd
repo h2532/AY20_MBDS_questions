@@ -1,0 +1,84 @@
+---
+title: "Q7.2"
+output:
+  pdf_document: default
+  html_document: default
+---
+## (a)
+
+output index
+
+the equations:\ $index=x_1+L_1*x_2+L_1*L_2*x_3+\cdots\cdots+(\prod_{i=1}^{d-1}L_i)*x_d$
+
+output coordinates
+
+the equations:\ and $x_d= \frac{index-index\ mod\ \prod_{i=1}^{d-1}L_i}{\prod_{i=1}^{d-1}L_i}$,\ $x_{d-1}=\frac{(index\ mod\ \prod_{i=1}^{d-1}L_i)-(index\ mod\ \prod_{i=1}^{d-1}L_i)\ mod\ \prod_{i=1}^{d-2}L_i}{\prod_{i=1}^{d-2}L_i}$ $\cdots$
+
+We can see these equations inductively.
+
+## (b)
+```{r,tidy=TRUE}
+l1=4
+l2=8
+l3=5
+l4=9
+l5=6
+l6=7
+findindex=function(x,y,z,a,b,c){
+  index<-x+l1*y+l1*l2*z+l1*l2*l3*a+l1*l2*l3*l4*b+l1*l2*l3*l4*l5*c
+  return(index)
+}
+findindex(3,2,2,7,4,6)
+```
+
+```{r,tidy=TRUE}
+findcoo=function(x){
+  x6=(x-x%%(l1*l2*l3*l4*l5))/(l1*l2*l3*l4*l5)
+  x5=(x%%(l1*l2*l3*l4*l5)-x%%(l1*l2*l3*l4))/(l1*l2*l3*l4)
+  x4=(x%%(l1*l2*l3*l4)-x%%(l1*l2*l3))/(l1*l2*l3)
+  x3=(x%%(l1*l2*l3)-x%%(l1*l2))/(l1*l2)
+  x2=(x%%(l1*l2)-x%%(l1))/(l1)
+  x1=x%%l1
+  return(c(x1,x2,x3,x4,x5,x6))
+}
+findcoo(42985)
+```
+
+```{r,tidy=TRUE}
+input<-read.table("D:/AY20_MBDS_questions/Question 7/Question 7.2/input_coordinates_7_2.txt")
+index<-read.table("D:/AY20_MBDS_questions/Question 7/Question 7.2/input_index_7_2.txt")
+x1<-input$V1
+x2<-input$V2
+x3<-input$V3
+x4<-input$V4
+x5<-input$V5
+x6<-input$V6
+index<-index$V1
+
+```
+
+```{r}
+findindex(x1,x2,x3,x4,x5,x6)
+```
+
+
+
+```{r}
+coo1=vector(mode="numeric",length=0)
+coo2=vector(mode="numeric",length=0)
+coo3=vector(mode="numeric",length=0)
+coo4=vector(mode="numeric",length=0)
+coo5=vector(mode="numeric",length=0)
+coo6=vector(mode="numeric",length=0)
+for(j in 1:1425){
+coo1[j]<-findcoo(index[j])[1]
+coo2[j]<-findcoo(index[j])[2]
+coo3[j]<-findcoo(index[j])[3]
+coo4[j]<-findcoo(index[j])[4]
+coo5[j]<-findcoo(index[j])[5]
+coo6[j]<-findcoo(index[j])[6]
+  }
+coo<-cbind(coo1,coo2,coo3,coo4,coo5,coo6)
+coo
+
+```
